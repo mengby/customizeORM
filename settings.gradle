@@ -1,2 +1,4 @@
 rootProject.name = 'customizeORM'
+include 'IPersistence_test'
+include 'IPersistence'
 

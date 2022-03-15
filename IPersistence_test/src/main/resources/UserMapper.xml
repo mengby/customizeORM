@@ -1,0 +1,8 @@
+<mapper namespace="User">
+    <select id="selectList" resultType="com.mengby.pojo.User">
+        select * from users;
+    </select>
+    <select id="selectOne" resultType="com.mengby.pojo.User" paramterType="com.mengby.pojo.User">
+        select * from users where id = #{id} and username = #{username}
+    </select>
+</mapper>

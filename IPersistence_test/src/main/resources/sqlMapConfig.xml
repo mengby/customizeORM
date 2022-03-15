@@ -1,0 +1,10 @@
+<configuration>
+    <dataSource>
+        <prperty name="driverClass" value="com.mysql.jdbc.Driver"></prperty>
+        <prperty name="jdbcUrl" value="jdbc:mysql:///orm"></prperty>
+        <prperty name="username" value="root"></prperty>
+        <prperty name="password" value="root"></prperty>
+    </dataSource>
+
+    <mapper resource="UserMapper.xml"></mapper>
+</configuration>
