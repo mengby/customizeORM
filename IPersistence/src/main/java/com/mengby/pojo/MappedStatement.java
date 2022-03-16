@@ -21,7 +21,7 @@ public class MappedStatement {
     // 返回值类型
     private String resultType;
     // 参数值类型
-    private String paramterType;
+    private String parameterType;
     // sql
     private String sql;
 
@@ -42,12 +42,12 @@ public class MappedStatement {
         this.resultType = resultType;
     }
 
-    public String getParamterType() {
-        return paramterType;
+    public String getParameterType() {
+        return parameterType;
     }
 
-    public void setParamterType(String paramterType) {
-        this.paramterType = paramterType;
+    public void setParameterType(String parameterType) {
+        this.parameterType = parameterType;
     }
 
     public String getSql() {

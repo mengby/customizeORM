@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.beans.PropertyVetoException;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 /**
  * @author bingye
@@ -17,7 +18,7 @@ import java.io.InputStream;
 public class ResourcesTest {
 
     @Test
-    public void main() throws PropertyVetoException, DocumentException {
+    public void main() throws PropertyVetoException, DocumentException, SQLException, ClassNotFoundException, NoSuchFieldException {
         final InputStream resourceAsSteam = Resources.getResourceAsSteam("sqlMapConfig.xml");
         final SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsSteam);
         final SqlSession sqlSession = sqlSessionFactory.openSession();
