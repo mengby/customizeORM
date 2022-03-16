@@ -7,11 +7,12 @@ import com.mengby.utils.GenericTokenParser;
 import com.mengby.utils.ParameterMapping;
 import com.mengby.utils.ParameterMappingTokenHandler;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class SimpleExecutor implements Executor {
     @Override
-    public <E> List<E> query(Configuration configuration, MappedStatement mappedStatement, Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    public <E> List<E> query(Configuration configuration, MappedStatement mappedStatement, Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, IntrospectionException, InstantiationException, InvocationTargetException {
         // 注册驱动、获取连接
         final Connection connection = configuration.getDataSource().getConnection();
         String sql = mappedStatement.getSql();
@@ -44,8 +45,25 @@ public class SimpleExecutor implements Executor {
 
         ResultSet resultSet = preparedStatement.executeQuery();
         // 封装返回结果
+        final String resultType = mappedStatement.getResultType();
 
-        return null;
+        Class<?> resultTypeClas = getClassType(resultType);
+        Object o = resultTypeClas.newInstance();
+
+        ArrayList<Object> objects = new ArrayList<>();
+        while (resultSet.next()) {
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
+
+                String columnName = metaData.getColumnName(i);
+                Object value = resultSet.getObject(columnName);
+                // 内省
+                PropertyDescriptor propertyDescriptor = new PropertyDescriptor(columnName, resultTypeClas);
+                propertyDescriptor.getWriteMethod().invoke(o, value);
+            }
+            objects.add(o);
+        }
+        return (List<E>) objects;
     }
 
     private Class<?> getClassType(String parameterType) throws ClassNotFoundException {
