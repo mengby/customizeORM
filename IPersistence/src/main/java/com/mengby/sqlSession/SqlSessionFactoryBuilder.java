@@ -18,10 +18,17 @@ public class SqlSessionFactoryBuilder {
      * @param in 输入一个解析为inputStream
      * @return 返回一个SqlSessionFactory
      */
-    public SqlSessionFactory build(InputStream in) throws DocumentException, PropertyVetoException {
+    public SqlSessionFactory build(InputStream in) {
         // step1 用dom4j解析xml文件到 Configuration
         final XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder();
-        final Configuration configuration = xmlConfigBuilder.parseConfig(in);
+        Configuration configuration = null;
+        try {
+            configuration = xmlConfigBuilder.parseConfig(in);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
         // step2 创建SqlSessionFactory
         return new DefaultSqlSessionFactory(configuration);
     }

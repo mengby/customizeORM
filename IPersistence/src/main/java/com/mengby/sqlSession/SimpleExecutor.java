@@ -29,6 +29,7 @@ public class SimpleExecutor implements Executor {
         BoundSql boundSql = getBoundSql(sql);
         // 获取preparedStatement
         final PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSqlText());
+        System.out.println(boundSql.getSqlText());
         // 设置参数
         final String parameterType = mappedStatement.getParameterType();
         Class<?> parameterTypeClass = getClassType(parameterType);
@@ -55,7 +56,7 @@ public class SimpleExecutor implements Executor {
             ResultSetMetaData metaData = resultSet.getMetaData();
             for (int i = 0; i < metaData.getColumnCount(); i++) {
 
-                String columnName = metaData.getColumnName(i);
+                String columnName = metaData.getColumnName(i+1);
                 Object value = resultSet.getObject(columnName);
                 // 内省
                 PropertyDescriptor propertyDescriptor = new PropertyDescriptor(columnName, resultTypeClas);
@@ -83,9 +84,9 @@ public class SimpleExecutor implements Executor {
     private BoundSql getBoundSql(String sql) {
         ParameterMappingTokenHandler parameterMappingTokenHandler = new ParameterMappingTokenHandler();
         final GenericTokenParser genericTokenParser = new GenericTokenParser("#{", "}", parameterMappingTokenHandler);
-        final String parse = genericTokenParser.parse(sql);
+        final String parseSql = genericTokenParser.parse(sql);
         // 解析出来的param的名称
         List<ParameterMapping> parameterMappings = parameterMappingTokenHandler.getParameterMappings();
-        return new BoundSql(sql, parameterMappings);
+        return new BoundSql(parseSql, parameterMappings);
     }
 }

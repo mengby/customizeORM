@@ -9,6 +9,7 @@ import org.dom4j.io.SAXReader;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author bingye
@@ -39,7 +40,10 @@ public class XMLMapperBuilder {
         }
         final Element mappersDocumentRootElement = mappersDocument.getRootElement();
         final String namespace = mappersDocumentRootElement.attributeValue(NAMESPACE);
-        final List<Element> selectElements = mappersDocumentRootElement.selectNodes("//select");
+        final List<Element> selectElements = mappersDocumentRootElement
+                .selectNodes("//select")
+                .stream().map(it -> (Element) it)
+                .collect(Collectors.toList());
         selectElements.forEach(element -> {
             final String id = element.attributeValue(ID);
             final String resultType = element.attributeValue(RESULT_TYPE);

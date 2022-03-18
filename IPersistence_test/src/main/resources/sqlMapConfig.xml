@@ -1,7 +1,7 @@
 <configuration>
     <dataSource>
-        <prperty name="driverClass" value="com.mysql.jdbc.Driver"></prperty>
-        <prperty name="jdbcUrl" value="jdbc:mysql:///orm"></prperty>
+        <prperty name="driverClass" value="com.mysql.cj.jdbc.Driver"></prperty>
+        <prperty name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/orm"></prperty>
         <prperty name="username" value="root"></prperty>
         <prperty name="password" value="root"></prperty>
     </dataSource>

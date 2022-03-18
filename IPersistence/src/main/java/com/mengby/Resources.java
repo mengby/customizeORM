@@ -1,4 +1,4 @@
-package com.mengby.io;
+package com.mengby;
 
 import java.io.InputStream;
 

@@ -1,5 +1,7 @@
 package com.mengby.sqlSession;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,8 +11,8 @@ import java.util.List;
  */
 public interface SqlSession {
 
-    <E> List<E> selectList(String statementId,Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException;
+    <E> List<E> selectList(String statementId,Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IntrospectionException, InvocationTargetException, IllegalAccessException, InstantiationException;
 
-    <T> T selectOne(String statementId,Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException;
+    <T> T selectOne(String statementId,Object... params) throws SQLException, ClassNotFoundException, NoSuchFieldException, IntrospectionException, InvocationTargetException, IllegalAccessException, InstantiationException;
 
 }
