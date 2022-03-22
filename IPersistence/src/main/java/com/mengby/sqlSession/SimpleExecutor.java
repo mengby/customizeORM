@@ -55,7 +55,6 @@ public class SimpleExecutor implements Executor {
         while (resultSet.next()) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             for (int i = 0; i < metaData.getColumnCount(); i++) {
-
                 String columnName = metaData.getColumnName(i+1);
                 Object value = resultSet.getObject(columnName);
                 // 内省

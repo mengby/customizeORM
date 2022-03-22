@@ -30,6 +30,8 @@ public class XMLConfigBuilder {
 
 
     private Configuration configuration;
+    private final Properties properties = new Properties();
+
 
     public XMLConfigBuilder() {
         this.configuration = new Configuration();
@@ -39,28 +41,18 @@ public class XMLConfigBuilder {
      * 将配置文件解析
      */
     public Configuration parseConfig(InputStream inputStream) throws DocumentException, PropertyVetoException {
-
         final Document document = new SAXReader().read(inputStream);
         final Element rootElement = document.getRootElement();
-        // configuration
-        final List<Node> dataSourceList = rootElement.selectNodes("//prperty");
-        final List<Element> collect = dataSourceList.stream().map(it -> (Element) it).collect(Collectors.toList());
-        final Properties properties = new Properties();
-        collect.forEach(element -> {
-            final String name = element.attributeValue("name");
-            final String value = element.attributeValue("value");
-            properties.setProperty(name,value);
-        });
-        System.out.println(properties);
+        // sqlMapConfig.xml
+        parseSqlMapConfig(rootElement);
         // connect pool
-        final ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
-        comboPooledDataSource.setDriverClass(properties.getProperty(DRIVER_CLASS));
-        comboPooledDataSource.setJdbcUrl(properties.getProperty(JDBC_URL));
-        comboPooledDataSource.setUser(properties.getProperty(USERNAME));
-        comboPooledDataSource.setPassword(properties.getProperty(PASSWORD));
-        configuration.setDataSource(comboPooledDataSource);
-
+        createDataSource();
         // mapper.xml
+        parseMapper(rootElement);
+        return configuration;
+    }
+
+    private void parseMapper(Element rootElement) {
         final List<Element> mapperList = rootElement.selectNodes("//mapper")
                 .stream().map(it -> (Element) it).collect(Collectors.toList());
         mapperList.forEach(element -> {
@@ -69,6 +61,25 @@ public class XMLConfigBuilder {
             final XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(configuration);
             xmlMapperBuilder.parse(resourceAsSteam);
         });
-        return configuration;
+    }
+
+    private void parseSqlMapConfig(Element rootElement) throws PropertyVetoException {
+        final List<Node> dataSourceList = rootElement.selectNodes("//prperty");
+        final List<Element> collect = dataSourceList.stream().map(it -> (Element) it).collect(Collectors.toList());
+        collect.forEach(element -> {
+            final String name = element.attributeValue("name");
+            final String value = element.attributeValue("value");
+            properties.setProperty(name,value);
+        });
+
+    }
+
+    private void createDataSource() throws PropertyVetoException {
+        final ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
+        comboPooledDataSource.setDriverClass(properties.getProperty(DRIVER_CLASS));
+        comboPooledDataSource.setJdbcUrl(properties.getProperty(JDBC_URL));
+        comboPooledDataSource.setUser(properties.getProperty(USERNAME));
+        comboPooledDataSource.setPassword(properties.getProperty(PASSWORD));
+        configuration.setDataSource(comboPooledDataSource);
     }
 }
